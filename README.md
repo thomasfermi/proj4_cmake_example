@@ -11,8 +11,10 @@ Afterwards use `./vcpkg install proj4` to install the [proj4][2] library.
 [2]:https://proj.org/
 
 ## 2. Compiling the example program
-Clone this repo, cd into it, and then
+Clone this repo, cd into it, create a build directory and call cmake from there:
 ```
+Linux:~/$ git clone https://github.com/thomasfermi/proj4_cmake_example.git
+Linux:~/$ cd proj4_cmake_example
 Linux:~/$ mkdir build
 Linux:~/$ cd build
 Linux:~/$ cmake .. "-DCMAKE_TOOLCHAIN_FILE=/home/my_user_name/vcpkg/scripts/buildsystems/vcpkg.cmake"
