@@ -19,8 +19,7 @@ Linux:~/$ mkdir build
 Linux:~/$ cd build
 Linux:~/$ cmake .. "-DCMAKE_TOOLCHAIN_FILE=/home/my_user_name/vcpkg/scripts/buildsystems/vcpkg.cmake"
 ```
-In the last command I assumed that you have your vcpkg installation under `/home/my_username/vcpkg`. Change the command according to your actual installation path (the path to where you cloned the vcpkg github repo).
-Hopefully cmake will finish successfully so that you can execute
+In the last command I assumed that you have your vcpkg installation under `/home/my_username/vcpkg`. Change the command according to your actual installation path (the path to where you cloned the vcpkg github repo). If CMake did not finish successfully, please check out the appendix of this README.md. If CMake did finish successfully, you can execute
 ```
 Linux:~/$ make
 ```
@@ -31,3 +30,8 @@ Linux:~/$ ./example_main
 5.14431
 52.1976
 ```
+
+### Appendix: Clang Compiler
+In the CMakeLists.txt there is a command `SET(CMAKE_CXX_COMPILER /usr/bin/clang++)`. You might want to change `usr/bin/clang++`to the path of your favorite C++ compiler. Note that I had trouble linking the libraries with `g++` and that is why I chose `clang++`. Check out this [stackoverflow answer][3] for more details.
+
+[3]:https://stackoverflow.com/a/51008697/2609987
