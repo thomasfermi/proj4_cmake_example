@@ -1,31 +1,83 @@
-#include <iostream>
+#include <stdio.h>
 
-#define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
-//#include <proj.h>
-#include <proj_api.h>
-using namespace std;
+#include <proj.h>
 
-int main()
+int main(void)
 {
-  double x = 138494.92605;
-  double y = 467792.640021;
 
-  char *srid28992 = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.04,49.91,465.84,-1.9848,1.7439,-9.0587,4.0772 +units=m +no_defs";
-  char *srid4326 = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+  PJ_CONTEXT *C;
 
-  projPJ source = pj_init_plus(srid28992);
-  projPJ target = pj_init_plus(srid4326);
+  PJ *P;
 
-  if(source==NULL || target==NULL)
-    return false;
+  PJ *norm;
 
-//  x *= DEG_TO_RAD;
-//  y *= DEG_TO_RAD;
+  PJ_COORD a, b;
 
-  int success = pj_transform(source, target, 1, 1, &x, &y, NULL );
+  /* or you may set C=PJ_DEFAULT_CTX if you are sure you will     */
 
-  x *= RAD_TO_DEG;
-  y *= RAD_TO_DEG;
+  /* use PJ objects from only one thread                          */
 
-  cout << success << endl << x << endl << y << endl;
+  C = proj_context_create();
+
+  P = proj_create_crs_to_crs(C,
+
+                             "EPSG:4326",
+
+                             "+proj=utm +zone=32 +datum=WGS84", /* or EPSG:32632 */
+
+                             NULL);
+
+  if (0 == P)
+  {
+
+    fprintf(stderr, "Failed to create transformation object.\n");
+
+    return 1;
+  }
+
+  /* This will ensure that the order of coordinates for the input CRS */
+
+  /* will be longitude, latitude, whereas EPSG:4326 mandates latitude, */
+
+  /* longitude */
+
+  norm = proj_normalize_for_visualization(C, P);
+
+  if (0 == norm)
+  {
+
+    fprintf(stderr, "Failed to normalize transformation object.\n");
+
+    return 1;
+  }
+
+  proj_destroy(P);
+
+  P = norm;
+
+  /* a coordinate union representing Copenhagen: 55d N, 12d E    */
+
+  /* Given that we have used proj_normalize_for_visualization(), the order of
+
+  /* coordinates is longitude, latitude, and values are expressed in degrees. */
+
+  a = proj_coord(12, 55, 0, 0);
+
+  /* transform to UTM zone 32, then back to geographical */
+
+  b = proj_trans(P, PJ_FWD, a);
+
+  printf("easting: %.3f, northing: %.3f\n", b.enu.e, b.enu.n);
+
+  b = proj_trans(P, PJ_INV, b);
+
+  printf("longitude: %g, latitude: %g\n", b.lp.lam, b.lp.phi);
+
+  /* Clean up */
+
+  proj_destroy(P);
+
+  proj_context_destroy(C); /* may be omitted in the single threaded case */
+
+  return 0;
 }
