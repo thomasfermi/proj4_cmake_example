@@ -1,3 +1,6 @@
+/* This source code is taken from https://proj.org/development/quickstart.html */
+/* Purpose of this repository is to show how to build this source code */
+
 #include <stdio.h>
 
 #include <proj.h>
