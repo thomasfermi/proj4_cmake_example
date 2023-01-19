@@ -24,8 +24,8 @@ to install the [PROJ][2] library.
 ## 2. Building the example program
 Clone this repo, cd into it, create a build directory and call cmake from there:
 ```sh
-$ git clone https://github.com/thomasfermi/proj4_cmake_example.git
-$ cd proj4_cmake_example
+$ git clone https://github.com/thomasfermi/proj_cmake_example.git
+$ cd proj_cmake_example
 $ mkdir build
 $ cd build
 $ cmake .. "-DCMAKE_TOOLCHAIN_FILE=/home/my_user_name/vcpkg/scripts/buildsystems/vcpkg.cmake"
